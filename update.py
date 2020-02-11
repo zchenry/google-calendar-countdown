@@ -6,7 +6,9 @@ def update_records():
 
     for row in load_data():
         record = Record(row[0], row[1], row[2], row[3])
-        if not record.is_over():
+        if record.is_over():
+            csv_content += record.to_csv()
+        else:
             csv_content += record.update_event()
 
     with open(path.join(PWD, DATAFILE), 'w') as file:

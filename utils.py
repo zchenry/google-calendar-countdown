@@ -56,7 +56,7 @@ class Record:
 
 
     def is_over(self):
-        return (not self.if_loop) and (self.today <= self.date)
+        return (not self.if_loop) and (self.date <= self.today)
 
 
     def create_event(self):
