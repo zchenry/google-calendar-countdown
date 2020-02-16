@@ -2,7 +2,7 @@ import pickle
 import numpy as np
 import pandas as pd
 from os import path
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -40,7 +40,13 @@ def get_service():
 class Record:
     service = get_service()
     cal_id = 'primary'
+    color_id = '7'
     today = date.today()
+    suffix = 'T00:00:00+09:00'
+    today_time = str(today) + suffix
+    tomorrow_time = str(today + timedelta(days=1)) + suffix
+    time_zone = 'Asia/Tokyo'
+    transparency = 'opaque'
 
 
     def __init__(self, content, date_str, if_loop=None, event_id=None):
@@ -58,14 +64,19 @@ class Record:
     def is_over(self):
         return (not self.if_loop) and (self.date <= self.today)
 
+    def get_event(self):
+        event = { 'summary': self.get_summary(),
+                  'colorId': self.color_id,
+                  'start': { 'date': None, 'dateTime': self.today_time,
+                             'timeZone': self.time_zone },
+                  'end': { 'date': None, 'dateTime': self.tomorrow_time,
+                           'timeZone': self.time_zone },
+                  'transparency': self.transparency }
+        return event
 
     def create_event(self):
         self.if_loop = self.date <= self.today
-        event = { 'summary': self.get_summary(),
-                  'colorId': '7',
-                  'start': { 'date': str(self.today) },
-                  'end': { 'date': str(self.today) } }
-        insert_dict = { 'calendarId': self.cal_id, 'body': event }
+        insert_dict = { 'calendarId': self.cal_id, 'body': self.get_event() }
         event = self.service.events().insert(**insert_dict).execute()
         self.event_id = event['id']
         return self.to_csv()
@@ -74,13 +85,10 @@ class Record:
     def update_event(self):
         query_dict = { 'calendarId': self.cal_id, 'eventId': self.event_id }
         event = self.service.events().get(**query_dict).execute()
-        event['summary'] = self.get_summary()
-        event['start']['date'] = str(self.today)
-        event['end']['date'] = str(self.today)
+        event.update(self.get_event())
         query_dict['body'] = event
         self.service.events().update(**query_dict).execute()
         return self.to_csv()
-
 
     def get_summary(self):
         if self.if_loop:
