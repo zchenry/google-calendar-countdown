@@ -97,13 +97,17 @@ class Record:
             if target_date < self.today:
                 target_date = self.date.replace(year=(self.today.year+1))
             days_left = (target_date - self.today).days
-            summary = '{}: {} days passed; {} days until next anniv.'.format(
-                self.content, days_passed, days_left)
+            summary = '{}: {} days passed; {} days until {} anniv.'.format(
+                self.content, days_passed, days_left,
+                self.ordinal_expression(days_passed))
             return summary
         else:
             days_left = (self.date - self.today).days
             return '{}: {} days left'.format(self.content, days_left)
 
+    def ordinal_expression(self, days):
+        year = int(days / 365) + 1
+        return str(year) + ['st', 'nd', 'rd', 'th'][min(year % 10 - 1, 3)]
 
     def strpdate(self, date_str=None):
         if date_str is None:
