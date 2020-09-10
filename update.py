@@ -1,4 +1,4 @@
-from utils import *
+from utils import DATAFILE, Record, load_data
 
 
 def update_records():
@@ -11,7 +11,7 @@ def update_records():
         else:
             csv_content += record.update_event()
 
-    with open(path.join(PWD, DATAFILE), 'w') as file:
+    with open(DATAFILE, 'w') as file:
         file.write(csv_content)
 
 

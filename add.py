@@ -1,5 +1,6 @@
 from os import path
-from utils import *
+
+from utils import DATAFILE, Record
 
 
 def add_record():
