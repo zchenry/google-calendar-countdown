@@ -89,8 +89,8 @@ class Record:
         if self.if_loop:
             days_passed = (self.today - self.date).days
             target_date = self.date.replace(year=self.today.year)
-            if target_date < self.today:
-                target_date = self.date.replace(year=(self.today.year+1))
+            if target_date <= self.today:
+                target_date = self.date.replace(year=(self.today.year + 1))
             days_left = (target_date - self.today).days
             summary = '{}: {} days passed; {} days until {} anniv.'.format(
                 self.content, days_passed, days_left,
