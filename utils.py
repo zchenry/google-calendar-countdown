@@ -39,7 +39,7 @@ def get_service():
 class Record:
     service = get_service()
     cal_id = 'primary'
-    color_id = '7'
+    color_id = '9'
     today = date.today()
     suffix = 'T00:00:00+09:00'
     today_time = str(today) + suffix
