@@ -2,10 +2,10 @@ import pickle
 from datetime import date, datetime, timedelta
 from os import path
 
-import pandas as pd
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+import numpy as np
 
 DATEFORMAT = '%Y-%m-%d'
 TIMEZONE = 'Asia/Tokyo'
@@ -50,7 +50,7 @@ class Record:
     def __init__(self, content, date_str, if_loop=None, event_id=None):
         self.content = content
         self.date = self.strpdate(date_str)
-        self.if_loop = if_loop
+        self.if_loop = if_loop == 'True'
         self.event_id = event_id
 
     def to_csv(self):
@@ -112,4 +112,4 @@ class Record:
 
 
 def load_data(file_path=DATAFILE):
-    return pd.read_csv(file_path, header=None).to_numpy()
+    return np.loadtxt(file_path, delimiter=',', dtype=str)
