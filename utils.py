@@ -41,9 +41,6 @@ class Record:
     cal_id = 'primary'
     color_id = '9'
     today = date.today()
-    suffix = 'T00:00:00+09:00'
-    today_time = str(today) + suffix
-    tomorrow_time = str(today + timedelta(days=1)) + suffix
     time_zone = 'Asia/Tokyo'
     transparency = 'opaque'
 
@@ -63,10 +60,8 @@ class Record:
     def get_event(self):
         event = {'summary': self.get_summary(),
                  'colorId': self.color_id,
-                 'start': {'date': None, 'dateTime': self.today_time,
-                           'timeZone': self.time_zone},
-                 'end': {'date': None, 'dateTime': self.tomorrow_time,
-                         'timeZone': self.time_zone},
+                 'start': {'date': str(self.today), 'timeZone': self.time_zone},
+                 'end': {'date': str(self.today), 'timeZone': self.time_zone},
                  'transparency': self.transparency}
         return event
 
